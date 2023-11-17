@@ -26,6 +26,9 @@ from transformers import (
     T5Tokenizer,
 )
 
+import sys
+sys.path.append('C:/Users/Jia/FastChat')
+
 from fastchat.constants import CPU_ISA
 from fastchat.conversation import Conversation, get_conv_template
 from fastchat.model.compression import load_compress_model

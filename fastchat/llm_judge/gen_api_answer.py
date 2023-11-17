@@ -13,6 +13,8 @@ import openai
 import shortuuid
 import tqdm
 
+import sys
+sys.path.append("C:/Users/Jia/FastChat")
 from fastchat.llm_judge.common import (
     load_questions,
     temperature_config,
@@ -57,7 +59,7 @@ def get_answer(
 
             conv.update_last_message(output)
             turns.append(output)
-
+        import pdb; pdb.set_trace()
         choices.append({"index": i, "turns": turns})
 
     # Dump answers

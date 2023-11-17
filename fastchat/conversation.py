@@ -588,6 +588,7 @@ register_conv_template(
 )
 
 # ChatGPT default template
+# maybe change the prompt
 register_conv_template(
     Conversation(
         name="chatgpt",
