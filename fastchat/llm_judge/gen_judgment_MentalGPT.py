@@ -180,7 +180,7 @@ if __name__ == "__main__":
         default="C:/Users/Jia/FastChat/fastchat/llm_judge/data/judge_prompts.jsonl",
         help="The file of judge prompts.",
     )
-    parser.add_argument("--judge-model", type=str, default="gpt-4")
+    parser.add_argument("--judge-model", type=str, default="gpt-3.5-turbo") #gpt-4-1106-preview
     parser.add_argument("--baseline-model", type=str, default="gpt-3.5-turbo")
     parser.add_argument(
         "--mode",
