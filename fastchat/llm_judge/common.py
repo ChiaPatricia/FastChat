@@ -14,7 +14,7 @@ from typing import Optional
 import openai
 import anthropic
 import sys
-sys.path.append('C:/Users/Jia/FastChat/fastchat/model')
+sys.path.append('/net/pr2/projects/plgrid/plggllm/FastChat/fastchat/model')
 
 from model_adapter import get_conversation_template, ANTHROPIC_MODEL_LIST
 
@@ -162,7 +162,7 @@ def run_judge_single(question, answer, judge, ref_answer, multi_turn=False):
     conv.append_message(conv.roles[1], None)
 
     if model in ["gpt-3.5-turbo", "gpt-4", "gpt-4-1106-preview"]:
-        judgment = chat_compeletion_openai(model, conv, temperature=0, max_tokens=2048)
+        judgment = chat_compeletion_openai(model, conv, temperature=0, max_tokens=1024)
     elif model in ANTHROPIC_MODEL_LIST:
         judgment = chat_compeletion_anthropic(
             model, conv, temperature=0, max_tokens=1024

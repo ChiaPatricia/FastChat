@@ -177,7 +177,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "--judge-file",
         type=str,
-        default="C:/Users/Jia/FastChat/fastchat/llm_judge/data/judge_prompts.jsonl",
+        # default="C:/Users/Jia/FastChat/fastchat/llm_judge/data/judge_prompts.jsonl",
+        default="/net/pr2/projects/plgrid/plggllm/FastChat/fastchat/llm_judge/data/judge_prompts.jsonl",
         help="The file of judge prompts.",
     )
     parser.add_argument("--judge-model", type=str, default="gpt-3.5-turbo") #gpt-4-1106-preview
@@ -209,9 +210,13 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    question_file = f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/question.jsonl"
-    answer_dir = f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_answer"
-    ref_answer_dir = f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/reference_answer"
+    # question_file = f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/question.jsonl"
+    # answer_dir = f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_answer"
+    # ref_answer_dir = f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/reference_answer"
+
+    question_file = f"/net/pr2/projects/plgrid/plggllm/FastChat/fastchat/llm_judge/data/{args.bench_name}/question.jsonl"
+    answer_dir = f"/net/pr2/projects/plgrid/plggllm/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_answer"
+    ref_answer_dir = f"/net/pr2/projects/plgrid/plggllm/FastChat/fastchat/llm_judge/data/{args.bench_name}/reference_answer"
 
     # Load questions
     questions = load_questions(question_file, None, None)
@@ -235,7 +240,8 @@ if __name__ == "__main__":
         judges = make_judge_single(args.judge_model, judge_prompts)
         play_a_match_func = play_a_match_single
         output_file = (
-            f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_judgment/{args.judge_model}_single.jsonl"
+            # f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_judgment/{args.judge_model}_single.jsonl"
+            f"/net/pr2/projects/plgrid/plggllm/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_judgment/{args.judge_model}_single.jsonl"
         )
         make_match_func = make_match_single
         baseline_model = None
@@ -243,7 +249,8 @@ if __name__ == "__main__":
         judges = make_judge_pairwise(args.judge_model, judge_prompts)
         play_a_match_func = play_a_match_pair
         output_file = (
-            f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_judgment/{args.judge_model}_pair.jsonl"
+            # f"C:/Users/Jia/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_judgment/{args.judge_model}_pair.jsonl"
+            f"/net/pr2/projects/plgrid/plggllm/FastChat/fastchat/llm_judge/data/{args.bench_name}/model_judgment/{args.judge_model}_pair.jsonl"
         )
         if args.mode == "pairwise-all":
             make_match_func = make_match_all_pairs
