@@ -3,6 +3,7 @@ Common data structures and utilities.
 """
 
 
+from model_adapter import get_conversation_template, ANTHROPIC_MODEL_LIST
 import ast
 import dataclasses
 import glob
@@ -18,7 +19,6 @@ import sys
 import google.generativeai as genai
 sys.path.append('C:/Users/Meimi/Desktop/FastChat_gemini/fastchat/model')
 
-from model_adapter import get_conversation_template, ANTHROPIC_MODEL_LIST
 
 # API setting constants
 API_MAX_RETRY = 16
@@ -417,30 +417,31 @@ def chat_completion_gemini(model, conv, temperature, max_tokens):
     output = API_ERROR_OUTPUT
 
     safety_settings = [
-    {
-        "category": "HARM_CATEGORY_DANGEROUS",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_HARASSMENT",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_HATE_SPEECH",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-        "threshold": "BLOCK_NONE",
-    },
-    {
-        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-        "threshold": "BLOCK_NONE",
-    },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HARASSMENT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_HATE_SPEECH",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+            "threshold": "BLOCK_NONE",
+        },
+        {
+            "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+            "threshold": "BLOCK_NONE",
+        },
     ]
-    
-    genai.configure(api_key="AIzaSyCyasTFv2MMi0n1yFNcZwtCkvsOyYo9AzQ")
-    model_gemini = genai.GenerativeModel(model, safety_settings=safety_settings)
+
+    # genai.configure(api_key="YOUR_API_KEY")
+    model_gemini = genai.GenerativeModel(
+        model, safety_settings=safety_settings)
 
     for _ in range(API_MAX_RETRY):
         try:
