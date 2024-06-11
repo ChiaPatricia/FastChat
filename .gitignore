@@ -22,6 +22,10 @@ wandb
 output
 checkpoints_flant5_3b
 
+# Files
+*clean_judgment.py
+*MentalHealth_judge_prompt.jsonl
+
 # Data
 *.pkl
 tests/state_of_the_union.txt
