@@ -2,6 +2,7 @@
 Common data structures and utilities.
 """
 
+
 import ast
 import dataclasses
 import glob
@@ -14,7 +15,8 @@ from typing import Optional
 import openai
 import anthropic
 import sys
-sys.path.append('/net/pr2/projects/plgrid/plggllm/FastChat/fastchat/model')
+import google.generativeai as genai
+sys.path.append('C:/Users/Meimi/Desktop/FastChat_gemini/fastchat/model')
 
 from model_adapter import get_conversation_template, ANTHROPIC_MODEL_LIST
 
@@ -162,11 +164,15 @@ def run_judge_single(question, answer, judge, ref_answer, multi_turn=False):
     conv.append_message(conv.roles[1], None)
 
     if model in ["gpt-3.5-turbo", "gpt-4", "gpt-4-1106-preview"]:
-        judgment = chat_compeletion_openai(model, conv, temperature=0, max_tokens=1024)
+        judgment = chat_compeletion_openai(
+            model, conv, temperature=0, max_tokens=1024)
     elif model in ANTHROPIC_MODEL_LIST:
         judgment = chat_compeletion_anthropic(
             model, conv, temperature=0, max_tokens=1024
         )
+    elif model in ["gemini-pro", "gemini-pro-vision"]:
+        judgment = chat_completion_gemini(
+            model, user_prompt, temperature=0, max_tokens=1024)
     else:
         raise ValueError(f"Invalid judge model name: {model}")
 
@@ -266,10 +272,15 @@ def run_judge_pair(question, answer_a, answer_b, judge, ref_answer, multi_turn=F
 
     if model in ["gpt-3.5-turbo", "gpt-4", "gpt-4-1106-preview"]:
         conv.set_system_message(system_prompt)
-        judgment = chat_compeletion_openai(model, conv, temperature=0, max_tokens=2048)
+        judgment = chat_compeletion_openai(
+            model, conv, temperature=0, max_tokens=2048)
+    elif model in ["gemini-pro", "gemini-pro-vision"]:
+        judgment = chat_completion_gemini(
+            model, user_prompt, temperature=0, max_tokens=1024)
     elif model in ANTHROPIC_MODEL_LIST:
         if system_prompt != "You are a helpful assistant.":
-            user_prompt = "[Instruction]\n" + system_prompt + "\n\n" + user_prompt
+            user_prompt = "[Instruction]\n" + \
+                system_prompt + "\n\n" + user_prompt
             conv.messages[0][1] = user_prompt
         judgment = chat_compeletion_anthropic(
             model, conv, temperature=0, max_tokens=1024
@@ -402,6 +413,52 @@ def play_a_match_pair(match: MatchPair, output_file: str):
     return result
 
 
+def chat_completion_gemini(model, conv, temperature, max_tokens):
+    output = API_ERROR_OUTPUT
+
+    safety_settings = [
+    {
+        "category": "HARM_CATEGORY_DANGEROUS",
+        "threshold": "BLOCK_NONE",
+    },
+    {
+        "category": "HARM_CATEGORY_HARASSMENT",
+        "threshold": "BLOCK_NONE",
+    },
+    {
+        "category": "HARM_CATEGORY_HATE_SPEECH",
+        "threshold": "BLOCK_NONE",
+    },
+    {
+        "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+        "threshold": "BLOCK_NONE",
+    },
+    {
+        "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+        "threshold": "BLOCK_NONE",
+    },
+    ]
+    
+    genai.configure(api_key="AIzaSyCyasTFv2MMi0n1yFNcZwtCkvsOyYo9AzQ")
+    model_gemini = genai.GenerativeModel(model, safety_settings=safety_settings)
+
+    for _ in range(API_MAX_RETRY):
+        try:
+            response = model_gemini.generate_content(conv,
+                                                     generation_config=genai.types.GenerationConfig(
+                                                         candidate_count=1,
+                                                         max_output_tokens=max_tokens,
+                                                         temperature=temperature)
+                                                     )
+            output = response.candidates[0].content.parts[0].text
+            break
+        except Exception as e:
+            print(type(e), e)
+            time.sleep(API_RETRY_SLEEP)
+
+    return output
+
+
 def chat_compeletion_openai(model, conv, temperature, max_tokens):
     output = API_ERROR_OUTPUT
     for _ in range(API_MAX_RETRY):
@@ -490,7 +547,8 @@ def chat_compeletion_palm(chat_state, model, conv, temperature, max_tokens):
     output = API_ERROR_OUTPUT
     for _ in range(API_MAX_RETRY):
         try:
-            response = chat_state.send_message(conv.messages[-2][1], **parameters)
+            response = chat_state.send_message(
+                conv.messages[-2][1], **parameters)
             output = response.text
             break
         except Exception as e:

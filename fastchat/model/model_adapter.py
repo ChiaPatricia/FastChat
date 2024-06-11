@@ -27,7 +27,7 @@ from transformers import (
 )
 
 import sys
-sys.path.append('/net/pr2/projects/plgrid/plggllm/FastChat')
+sys.path.append('C:/Users/Meimi/Desktop/FastChat_gemini')
 
 from fastchat.constants import CPU_ISA
 from fastchat.conversation import Conversation, get_conv_template
