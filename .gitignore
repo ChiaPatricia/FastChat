@@ -25,6 +25,8 @@ checkpoints_flant5_3b
 # Files
 *clean_judgment.py
 *MentalHealth_judge_prompt.jsonl
+*model_answer*
+*model_judgment*
 
 # Data
 *.pkl
