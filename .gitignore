@@ -28,6 +28,7 @@ checkpoints_flant5_3b
 *model_answer*
 *model_judgment*
 *clean_data.ipynb
+*newCombined_bench
 
 # Data
 *.pkl
