@@ -29,6 +29,7 @@ checkpoints_flant5_3b
 *model_judgment*
 *clean_data.ipynb
 *newCombined_bench
+*gen_judgment_MentalGPT*
 
 # Data
 *.pkl
